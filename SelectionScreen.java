@@ -4,7 +4,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.sound.sampled.*;
 
-public class TestSelectionScreen extends JPanel {
+public class SelectionScreen extends JPanel implements Escenario {
 	private final int
 		COORD_N_2_X 	= 196,
 		COORD_N_2_Y 	= 177,
@@ -26,13 +26,19 @@ public class TestSelectionScreen extends JPanel {
 	private final JLabel BACKGROUND = new JLabel();
 
 	private final boolean MUSIC_ENABLED = false;
+	
+	private final Runnable FINAL_ACTION; 
+		// Va a haber que poner esto en cada clase a menos que se haga una clase abstracta Escenario 
+		// que tenga esto, finalAction y FINAL_ACTION, y que cada una herede de Escenario
 
 	private File archivo;
 	private AudioInputStream stream;
 	private Clip clip;
 
 
-	public TestSelectionScreen() {
+	public SelectionScreen(Runnable fa) {
+		FINAL_ACTION = fa;
+		
 		setOpaque(false);
 
 		BACKGROUND.setLayout(new BorderLayout());
@@ -71,14 +77,18 @@ public class TestSelectionScreen extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (dos_senyalado)
-					System.out.println("Tabla del 2 requerida");
-				else if (tres_senyalado)
-					System.out.println("Tabla del 3 requerida");
+				Juego.setTabla(dos_senyalado? 2 : 3); // AGREGAR CLASE ESTATICA JUEGO PARA VARIABLES GLOBALES
+				finalAction();
 			}
 		});
 	}
+	
+	
+	public void finalAction() {
+		FINAL_ACTION.run();
+	}
 
+	
 	public JLabel getBG() {return BACKGROUND;}
 
 	private boolean isBetween(Comparable x, Comparable a, Comparable b) {

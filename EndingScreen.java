@@ -2,10 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class EndingScreen extends JPanel {
+public class EndingScreen extends JPanel implements Escenario {
 	private final JLabel BACKGROUND = new JLabel();
+	private final Runnable FINAL_ACTION;
 
-	public EndingScreen() {
+	public EndingScreen(Runnable fa) {
+		FINAL_ACTION = fa;
+		
 		setOpaque(false);
 
 		BACKGROUND.setLayout(new BorderLayout());
@@ -14,7 +17,7 @@ public class EndingScreen extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				clickScript();
+				finalAction();
 			}
 		});
 
@@ -22,13 +25,14 @@ public class EndingScreen extends JPanel {
 		addMouseMotionListener(null);
 	}
 
-	public void clickScript() {
-		System.out.println("Pedido pasaje");
+	@Override
+	public void finalAction() {
+		FINAL_ACTION.run();
 	}
 
 	public JLabel getBG() {return BACKGROUND;}
 
-	public static void createFrame() {
+	private static void createFrame() {
 		JFrame frame = new JFrame();
 		frame.setContentPane(new EndingScreen().getBG());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

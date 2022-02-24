@@ -2,36 +2,22 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class EndingScreen extends JPanel implements Escenario {
-	private final JLabel BACKGROUND = new JLabel();
-	private final Runnable FINAL_ACTION;
+public class EndingScreen extends Escenario {
 
-	public EndingScreen(Runnable fa) {
-		FINAL_ACTION = fa;
+	public EndingScreen(Runnable r) {
+		super(r);
 		
-		setOpaque(false);
+		BG_IMAGE = new ImageIcon("Fondos/final.jpg");
 
-		BACKGROUND.setLayout(new BorderLayout());
-		BACKGROUND.setIcon(new ImageIcon("Fondos/final.jpg"));
-		BACKGROUND.add(this, BorderLayout.CENTER);
-
-		addMouseListener(new MouseAdapter() {
+		MOUSE_LISTENER = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				finalAction();
+				FINAL_ACTION.run();
 			}
-		});
+		};
 
-		// Para probar
-		addMouseMotionListener(null);
+		MOUSE_MOTION_LISTENER = null	;
 	}
-
-	@Override
-	public void finalAction() {
-		FINAL_ACTION.run();
-	}
-
-	public JLabel getBG() {return BACKGROUND;}
-
+/*
 	private static void createFrame() {
 		JFrame frame = new JFrame();
 		frame.setContentPane(new EndingScreen().getBG());
@@ -44,4 +30,5 @@ public class EndingScreen extends JPanel implements Escenario {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> createFrame());
 	}
+*/
 }

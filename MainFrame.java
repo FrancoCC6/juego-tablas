@@ -10,10 +10,10 @@ public class MainFrame extends JFrame {
   // NECESARIO dado que si se aplican los listeners sobre el JFrame se computa la barra de acción como parte de la pantalla de juego
   
   private final Escenario ESCENARIOS[] = {
-    new SeleccionNivel(this::transicionar),
-    new Juego(false, this::transicionar),
-    new Juego(true, this::transicionar),
-    new EndingScreen(this::transicionar);
+    new SeleccionNivel(this::transicionar, MAIN_PANEL),
+    new Juego(false, this::transicionar, MAIN_PANEL),
+    new Juego(true, this::transicionar, MAIN_PANEL),
+    new EndingScreen(this::transicionar, MAIN_PANEL);
   }
   
   private int iterador_escenario = -1; // Cuando se llama a transicionar en el constructor, para cargar la primera pantalla este número se convierte en 0
@@ -39,14 +39,17 @@ public class MainFrame extends JFrame {
     MAIN_PANEL.removeMouseMotionListener(getMouseMotionListeners()[0]);
     
     // Poner listeners nuevos
-    ++iterador_escenario %= ESCENARIOS.length; // Señala al siguiente escenario en la lista
+    // ++iterador_escenario %= ESCENARIOS.length; // Sería hermoso si funcionase
+    iterador_escenario = (iterador_escenario + 1) % ESCENARIOS.length;// Señala al siguiente escenario en la lista
     
-    MAIN_PANEL.addMouseListener       (ESCENARIOS[iterador_escenario]. MOUSE_LISTENER);
-    MAIN_PANEL.addMouseMotionListener (ESCENARIOS[iterador_escenario]. MOUSE_MOTION_LISTENER);
-    BACKGROUND.setIcon                (ESCENARIOS[iterador_escenario]. BG_IMAGE);
+    Escenario escenario_actual = ESCENARIOS[iterador_escenario]
+    
+    MAIN_PANEL.addMouseListener       (escenario_actual.getMouseListener());
+    MAIN_PANEL.addMouseMotionListener (escenario_actual.getMouseMotionListener());
+    BACKGROUND.setIcon                (escenario_actual.getBGImageIcon());
     
     // Inicializar
-    ESCENARIOS[iterador_escenario].inicializar();
+    escenario_actual.inicializar();
   }
   
   

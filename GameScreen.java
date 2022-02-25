@@ -1,13 +1,28 @@
-import java.io.File;
+/*
+	Checklist:
+	
+	Inicializar variables finales dependientes de CANTIDAD_CUENTAS en el constructor - EN CURSO
+	Cambiar paintComponent por dibujar - LISTO
+	Cambiar ocurrencias de repaint() por PANEL_ASOCIADO.repaint() - LISTO
+	Heredar de Escenario en lugar de JPanel - LISTO
+	Agregar parametros necesarios a constructor y darles el tratamiento necesario - LISTO
+	Renombrar clase y archivo a GameScreen - LISTO
+	Reemplazar métodos de addXXXlistener por asignación a sus campos respectivos - LISTO
+	Inhabilitar:
+		Códigos de BACKGROUND - LISTO
+		Código de generación de JFrame - LISTO
+		main() - LISTO
+		Código relacionado a JPanel - LISTO
+		Código de reproducción de música - LISTO
+*/
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.sound.sampled.*;
 
 
-public class TestGameScreen extends JPanel {
-	private final JLabel BACKGROUND = new JLabel();
-
+public class GameScreen extends Escenario {
+	
 
 	private final double PIXEL_CONSTANT = 4.0/3.0;
 
@@ -76,7 +91,6 @@ public class TestGameScreen extends JPanel {
 
 	private final boolean 
 		ON_TESTING_MODE 		= true,
-		MUSIC_ENABLED			= true,
 		AYUDAS_DEPLOY[] 		= new boolean[CANTIDAD_CUENTAS],
 		ENTRADA_XIZQ_CTAS[]		= new boolean[CANTIDAD_CUENTAS],
 		ENTRADA_XIZQ_RDOS[]		= new boolean[CANTIDAD_CUENTAS],
@@ -128,37 +142,28 @@ public class TestGameScreen extends JPanel {
 		},
 		COLOR_SIN_RESOLVER = new Color(50, 50, 50);
 
-	private File sound_file;
+	
+	public GameScreen(boolean es_nivel_1, Runnable r, JPanel p) {
+		super(r, p);
+		// cantidad_cuentas = es_nivel_1 ? 4 : 5
 
-	private AudioInputStream sound_stream;
+		// inicializar(); // Se llama en el método transicionar en MainFrame
+		
+		bg_imageicon = new ImageIcon("Fondos/juego.png");
 
-	private Clip sound_clip;
-
-
-	public TestGameScreen() {
-		setOpaque(false);
-
-		BACKGROUND.setLayout(new BorderLayout());
-		BACKGROUND.setIcon(new ImageIcon("Fondos/juego.png"));
-		BACKGROUND.add(this, BorderLayout.CENTER);
-
-		cargarMusica();
-
-		inicializar();
-
-		addMouseMotionListener(new MouseMotionAdapter() {
+		mouse_motion_listener = new MouseMotionAdapter() {
 			public void mouseDragged(MouseEvent e) {
 				if (cuenta_seleccionada >= 0) {
 					coord_flecha_x = e.getX();
 					coord_flecha_y = e.getY();
 					setPuntaFlecha();
 
-					repaint();
+					PANEL_ASOCIADO.repaint();
 				}
 			}
-		});
+		};
 
-		addMouseListener(new MouseAdapter() {
+		mouse_listener = new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (ANIMACION.isRunning()) return;
 
@@ -170,7 +175,7 @@ public class TestGameScreen extends JPanel {
 				&& 	cuenta_seleccionada < CANTIDAD_CUENTAS
 				&&	!RESP_CORRECTAMENTE[cuenta_seleccionada]) {
 						setPuntaFlecha();
-						repaint();
+						PANEL_ASOCIADO.repaint();
 				}
 				else cuenta_seleccionada = -1;
 			}
@@ -196,41 +201,20 @@ public class TestGameScreen extends JPanel {
 
 
 				cuenta_seleccionada = resultado_seleccionado = -1;
-				repaint();
+				PANEL_ASOCIADO.repaint();
 			}
 
 			public void mouseClicked(MouseEvent e) {
 				if (ANIMACION.isRunning()) return;
-
+				/*
 				if (ON_TESTING_MODE) {
 					dialogo = DIALOGOS_POSIBLES[(int)(Math.random() * (double)DIALOGOS_POSIBLES.length)];
 					inicializar();
-					repaint();
+					PANEL_ASOCIADO.repaint();
 				}
+				*/
 			}
-		});
-	}
-
-
-
-	private void cargarMusica() {
-		if (MUSIC_ENABLED) try {
-			sound_file = new File("bg_music_2.wav");
-
-			if (sound_file.exists()) {
-				sound_stream = AudioSystem.getAudioInputStream(sound_file);
-				sound_clip = AudioSystem.getClip();
-				sound_clip.open(sound_stream);
-				sound_clip.start();
-				sound_clip.loop(Clip.LOOP_CONTINUOUSLY);
-			}
-			else {
-				System.err.println("Archivo de sonido movido de carpeta");
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		};
 	}
 
 
@@ -241,7 +225,7 @@ public class TestGameScreen extends JPanel {
 
 	private final void actionPerformedAnimacion() {
 		if (++keyframes_entrada == 0) ANIMACION.stop();
-		repaint();
+		PANEL_ASOCIADO.repaint();
 	}
 
 
@@ -262,9 +246,6 @@ public class TestGameScreen extends JPanel {
 		// 7 pixeles asignados a caracteres anchos, 3 pixeles asignados a caracteres estrechos (fuente tamaño 9)
 		return factor*2*7 + (factor*2-1)*3;
 	}
-
-
-	public JLabel getBG() {return BACKGROUND;}
 
 
 	private void mezclarResultados() {
@@ -385,14 +366,12 @@ public class TestGameScreen extends JPanel {
 		}
 
 		keyframes_entrada = -60;
-		repaint();
+		PANEL_ASOCIADO.repaint();
 		ANIMACION.start();
 	}
 
 
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
+	public void dibujar(Graphics g) {
 		g.setColor(Color.BLACK);
 
 		g.setFont(FUENTE_NNIVEL);
@@ -448,18 +427,18 @@ public class TestGameScreen extends JPanel {
 		}
 	}
 
-
+/*
 	public static void createFrame() {
 		JFrame frame = new JFrame();
-		frame.setContentPane(new TestGameScreen().getBG());
+		frame.setContentPane(new GameScreen().getBG());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setResizable(false);
 		frame.setVisible(true);
 	}
 
-
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> createFrame());
 	}
+*/
 }

@@ -4,18 +4,18 @@ import javax.swing.*;
 
 public class EndingScreen extends Escenario {
 
-	public EndingScreen(Runnable r) {
-		super(r);
+	public EndingScreen(Runnable r, JPanel p) {
+		super(r, p);
 		
-		BG_IMAGE = new ImageIcon("Fondos/final.jpg");
+		bg_imageicon = new ImageIcon("Fondos/final.jpg");
 
-		MOUSE_LISTENER = new MouseAdapter() {
+		mouse_listener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				FINAL_ACTION.run();
 			}
 		};
 
-		MOUSE_MOTION_LISTENER = null	;
+		mouse_motion_listener = null	;
 	}
 /*
 	private static void createFrame() {

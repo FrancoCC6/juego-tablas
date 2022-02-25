@@ -14,6 +14,8 @@ public abstract class Escenario {
     PANEL_ASOCIADO = p;
   }
   
+  public abstract void dibujar(Graphics g);
+  
   public MouseListener getMouseListener() {return mouse_listener;}
   public MouseMotionListener getMouseMotionListener() {return mouse_motion_listener;}
   public ImageIcon getBGImageIcon() {return bg_imageicon;}

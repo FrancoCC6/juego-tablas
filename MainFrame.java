@@ -4,11 +4,6 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
   
-  private final JLabel BACKGROUND = new JLabel();
-  
-  private final JPanel MAIN_PANEL = new JPanel(); 
-  // NECESARIO dado que si se aplican los listeners sobre el JFrame se computa la barra de acción como parte de la pantalla de juego
-  
   private final Escenario ESCENARIOS[] = {
     new SeleccionNivel(this::transicionar, MAIN_PANEL),
     new Juego(false, this::transicionar, MAIN_PANEL),
@@ -17,6 +12,15 @@ public class MainFrame extends JFrame {
   }
   
   private int iterador_escenario = -1; // Cuando se llama a transicionar en el constructor, para cargar la primera pantalla este número se convierte en 0
+  
+  private final JLabel BACKGROUND = new JLabel();
+  
+  private final JPanel MAIN_PANEL = new JPanel() {
+    public void paintComponent(Graphics g) {
+      super(g);
+      ESCENARIOS[iterador_escenario].dibujar(g);
+    }
+  };
   
   public MainFrame() {
     BACKGROUND.setLayout(new BorderLayout());

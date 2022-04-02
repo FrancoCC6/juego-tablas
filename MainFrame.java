@@ -39,14 +39,14 @@ public class MainFrame extends JFrame {
   
   private void transicionar() {
     // Limpiar listeners actuales
-    MAIN_PANEL.removeMouseListener(getMouseListeners()[0]);
-    MAIN_PANEL.removeMouseMotionListener(getMouseMotionListeners()[0]);
+    MAIN_PANEL.removeMouseListener(MAIN_PANEL.getMouseListeners()[0]);
+    MAIN_PANEL.removeMouseMotionListener(MAIN_PANEL.getMouseMotionListeners()[0]);
     
     // Poner listeners nuevos
     // ++iterador_escenario %= ESCENARIOS.length; // Sería hermoso si funcionase
     iterador_escenario = (iterador_escenario + 1) % ESCENARIOS.length;// Señala al siguiente escenario en la lista
     
-    Escenario escenario_actual = ESCENARIOS[iterador_escenario]
+    Escenario escenario_actual = ESCENARIOS[iterador_escenario];
     
     MAIN_PANEL.addMouseListener       (escenario_actual.getMouseListener());
     MAIN_PANEL.addMouseMotionListener (escenario_actual.getMouseMotionListener());

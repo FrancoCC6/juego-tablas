@@ -1,19 +1,8 @@
 /*
 	Checklist:
 	
-	Inicializar variables finales dependientes de CANTIDAD_CUENTAS en el constructor - EN CURSO
-	Cambiar paintComponent por dibujar - LISTO
-	Cambiar ocurrencias de repaint() por PANEL_ASOCIADO.repaint() - LISTO
-	Heredar de Escenario en lugar de JPanel - LISTO
-	Agregar parametros necesarios a constructor y darles el tratamiento necesario - LISTO
-	Renombrar clase y archivo a GameScreen - LISTO
-	Reemplazar métodos de addXXXlistener por asignación a sus campos respectivos - LISTO
-	Inhabilitar:
-		Códigos de BACKGROUND - LISTO
-		Código de generación de JFrame - LISTO
-		main() - LISTO
-		Código relacionado a JPanel - LISTO
-		Código de reproducción de música - LISTO
+	Implementar ayudas en dos renglones para nivel 2 - SIGUIENTE
+	Implementar diálogos dinámicos
 */
 
 import java.awt.*;
@@ -34,74 +23,66 @@ public class GameScreen extends Escenario {
 
 
 	private final int 
-		TABLA					= 3,
-		CANTIDAD_CUENTAS		= 4,
-		FACTOR_MINIMO			= 2,
-		FPS						= 60,
+		TABLA			= 3, // Y la tabla?
+		CANTIDAD_CUENTAS,
+		FACTOR_MINIMO,
+		FPS			= 60,
 
-		ANGULO_PUNTA 			= 20,
-		LARGO_PUNTA 			= 20,
+		ANGULO_PUNTA 		= 20,
+		LARGO_PUNTA 		= 20,
 
-		BASE_ESPACIO_LIBRE 		= 720/CANTIDAD_CUENTAS,
+		BASE_ESPACIO_LIBRE,
 		ALTURA_ESPACIO_LIBRE	= 150,
-		BASE_CUENTAS			= 85,
-		ALTURA_CUENTAS			= 19,
-		ALTURA_AYUDAS			= 26,
-		BASE_RESULTADOS			= 72,
-		ALTURA_RESULTADOS		= 50,
-		MARGEN					= 40,
-		ESPACIO_OCIOSO			= 120,
-		DISTANCIA_PUERTO		= 15,
-		DIAMETRO_PUERTO			= 7,
+		BASE_CUENTAS		= 85,
+		ALTURA_CUENTAS		= 19,
+		ALTURA_AYUDAS		= 26,
+		BASE_RESULTADOS		= 72,
+		ALTURA_RESULTADOS	= 50,
+		MARGEN			= 40,
+		ESPACIO_OCIOSO		= 120,
+		DISTANCIA_PUERTO	= 15,
+		DIAMETRO_PUERTO		= 7,
 
-		COORD_DIALOGO_X			= 416,
-		COORD_DIALOGO_Y			= 538,
-		COORD_NNIVEL_X			= 406,
-		COORD_NNIVEL_Y			= 27,
+		COORD_DIALOGO_X		= 416,
+		COORD_DIALOGO_Y		= 538,
+		COORD_NNIVEL_X		= 406,
+		COORD_NNIVEL_Y		= 27,
 
-		COORDS_CUENTAS_X[] 		= new int[CANTIDAD_CUENTAS],
-		COORDS_CUENTAS_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_CUENTAS_X[], 	COORDS_CUENTAS_Y[],
 
-		COORDS_AYUDAS_X[] 		= new int[CANTIDAD_CUENTAS],
-		COORDS_AYUDAS_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_AYUDAS_X[], 	COORDS_AYUDAS_Y[],
 
-		BASES_AYUDAS[] 			= new int[CANTIDAD_CUENTAS],
+		BASES_AYUDAS[],
 
-		COORDS_RDOS_X[] 		= new int[CANTIDAD_CUENTAS],
-		COORDS_RDOS_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_RDOS_X[], 	COORDS_RDOS_Y[],
 
-		COORDS_PPOG_X[]		 	= new int[CANTIDAD_CUENTAS],
-		COORDS_PPOG_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_PPOG_X[], 	COORDS_PPOG_Y[],
 
-		COORDS_CPOG_X[] 		= new int[CANTIDAD_CUENTAS],
-		COORDS_CPOG_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_CPOG_X[], 	COORDS_CPOG_Y[],
 
-		COORDS_CPDE_X[] 		= new int[CANTIDAD_CUENTAS],
-		COORDS_CPDE_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_CPDE_X[], 	COORDS_CPDE_Y[],
 
-		COORDS_PPDE_X[] 		= new int[CANTIDAD_CUENTAS],
-		COORDS_PPDE_Y[] 		= new int[CANTIDAD_CUENTAS],
+		COORDS_PPDE_X[], 	COORDS_PPDE_Y[],
 
-		COORDS_FCHAENDS_X[]		= new int[2],
-		COORDS_FCHAENDS_Y[]		= new int[2],
+		COORDS_FCHAENDS_X[]	= new int[2],
+		COORDS_FCHAENDS_Y[]	= new int[2],
 
-		RESULTADOS[] 			= new int[CANTIDAD_CUENTAS],
-		RDOS_UBICACION[] 		= new int[CANTIDAD_CUENTAS];
+		RESULTADOS[], 		RDOS_UBICACION[];
 
 
 	private final boolean 
-		ON_TESTING_MODE 		= true,
-		AYUDAS_DEPLOY[] 		= new boolean[CANTIDAD_CUENTAS],
-		ENTRADA_XIZQ_CTAS[]		= new boolean[CANTIDAD_CUENTAS],
-		ENTRADA_XIZQ_RDOS[]		= new boolean[CANTIDAD_CUENTAS],
-		RESP_CORRECTAMENTE[]	= new boolean[CANTIDAD_CUENTAS];
+		ON_TESTING_MODE = false,
+		AYUDAS_DEPLOY[],
+		ENTRADA_XIZQ_CTAS[],
+		ENTRADA_XIZQ_RDOS[],
+		RESP_CORRECTAMENTE;
 
 
 	private int 
 		coord_flecha_x, 
 		coord_flecha_y, 
-		cuenta_seleccionada = -1,
-		resultado_seleccionado = -1,
+		cuenta_seleccionada 	= -1,
+		resultado_seleccionado 	= -1,
 		keyframes_entrada,
 		keyframes_dialogo,
 		keyframes_color;
@@ -111,13 +92,13 @@ public class GameScreen extends Escenario {
 
 
 	private final String 
-		DIALOGOS_POSIBLES[] 	= new String[] {
+		DIALOGOS_POSIBLES[] = new String[] {
 			"Sample Text",
 			"Hola",
 			"Buen trabajo!"
 		},
-		CUENTAS[] 				= new String[CANTIDAD_CUENTAS],
-		AYUDAS[] 				= new String[CANTIDAD_CUENTAS];
+		CUENTAS[],
+		AYUDAS[];
 
 
 	private String dialogo = DIALOGOS_POSIBLES[0];
@@ -145,9 +126,51 @@ public class GameScreen extends Escenario {
 	
 	public GameScreen(boolean es_nivel_1, Runnable r, JPanel p) {
 		super(r, p);
-		// cantidad_cuentas = es_nivel_1 ? 4 : 5
 
 		// inicializar(); // Se llama en el método transicionar en MainFrame
+		
+		// Inicialización de campos constantes dependientes de es_nivel_1
+		
+		FACTOR_MINIMO 		= es_nivel_1 ? 2 : 6;
+		// CANTIDAD_CUENTAS y dependencias
+		CANTIDAD_CUENTAS 	= es_nivel_1 ? 4 : 5;
+		BASE_ESPACIO_LIBRE 	= 720/CANTIDAD_CUENTAS;
+		
+		COORDS_CUENTAS_X[] 	= new int[CANTIDAD_CUENTAS];
+		COORDS_CUENTAS_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		COORDS_AYUDAS_X[] 	= new int[CANTIDAD_CUENTAS];
+		COORDS_AYUDAS_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		BASES_AYUDAS[] 		= new int[CANTIDAD_CUENTAS];
+
+		COORDS_RDOS_X[] 	= new int[CANTIDAD_CUENTAS];
+		COORDS_RDOS_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		COORDS_PPOG_X[]		= new int[CANTIDAD_CUENTAS];
+		COORDS_PPOG_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		COORDS_CPOG_X[] 	= new int[CANTIDAD_CUENTAS];
+		COORDS_CPOG_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		COORDS_CPDE_X[] 	= new int[CANTIDAD_CUENTAS];
+		COORDS_CPDE_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		COORDS_PPDE_X[] 	= new int[CANTIDAD_CUENTAS];
+		COORDS_PPDE_Y[] 	= new int[CANTIDAD_CUENTAS];
+
+		RESULTADOS[] 		= new int[CANTIDAD_CUENTAS];
+		RDOS_UBICACION[] 	= new int[CANTIDAD_CUENTAS];
+		
+		AYUDAS_DEPLOY[] 	= new boolean[CANTIDAD_CUENTAS];
+		ENTRADA_XIZQ_CTAS[]	= new boolean[CANTIDAD_CUENTAS];
+		ENTRADA_XIZQ_RDOS[]	= new boolean[CANTIDAD_CUENTAS];
+		RESP_CORRECTAMENTE[]	= new boolean[CANTIDAD_CUENTAS];
+		
+		CUENTAS[] 		= new String[CANTIDAD_CUENTAS];
+		AYUDAS[] 		= new String[CANTIDAD_CUENTAS];
+		
+		//--------------------------------------------------------------------
 		
 		bg_imageicon = new ImageIcon("Fondos/juego.png");
 
@@ -170,8 +193,7 @@ public class GameScreen extends Escenario {
 				coord_flecha_x = e.getX();
 				coord_flecha_y = e.getY();
 				cuenta_seleccionada = (coord_flecha_x - MARGEN) / BASE_ESPACIO_LIBRE;
-				if (
-					isBetween(coord_flecha_y, MARGEN, MARGEN + ALTURA_ESPACIO_LIBRE) 
+				if (	isBetween(coord_flecha_y, MARGEN, MARGEN + ALTURA_ESPACIO_LIBRE) 
 				&& 	cuenta_seleccionada < CANTIDAD_CUENTAS
 				&&	!RESP_CORRECTAMENTE[cuenta_seleccionada]) {
 						setPuntaFlecha();
@@ -184,7 +206,7 @@ public class GameScreen extends Escenario {
 				if (ANIMACION.isRunning()) return;
 
 				for (int i = 0; i < CANTIDAD_CUENTAS; i++)
-					if (isBetween(coord_flecha_x, COORDS_RDOS_X[i], COORDS_RDOS_X[i] + BASE_RESULTADOS)
+					if (	isBetween(coord_flecha_x, COORDS_RDOS_X[i], COORDS_RDOS_X[i] + BASE_RESULTADOS)
 					&&	isBetween(coord_flecha_y, COORDS_RDOS_Y[i] - ALTURA_RESULTADOS - DISTANCIA_PUERTO - DIAMETRO_PUERTO, COORDS_RDOS_Y[i])) {
 							resultado_seleccionado = i; 
 							break;
@@ -204,16 +226,17 @@ public class GameScreen extends Escenario {
 				PANEL_ASOCIADO.repaint();
 			}
 
+			/*
 			public void mouseClicked(MouseEvent e) {
 				if (ANIMACION.isRunning()) return;
-				/*
+				
 				if (ON_TESTING_MODE) {
 					dialogo = DIALOGOS_POSIBLES[(int)(Math.random() * (double)DIALOGOS_POSIBLES.length)];
 					inicializar();
 					PANEL_ASOCIADO.repaint();
 				}
-				*/
 			}
+			*/
 		};
 	}
 

@@ -6,8 +6,8 @@ public class MainFrame extends JFrame {
   
   private final Escenario ESCENARIOS[] = {
     new SeleccionNivel(this::transicionar, MAIN_PANEL),
-    new Juego(false, this::transicionar, MAIN_PANEL),
     new Juego(true, this::transicionar, MAIN_PANEL),
+    new Juego(false, this::transicionar, MAIN_PANEL),
     new EndingScreen(this::transicionar, MAIN_PANEL);
   }
   
